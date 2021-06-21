@@ -1,0 +1,9 @@
+torchvision==0.8.0
+torch==1.7.0
+opencv_python==4.2.0.32
+pycocotools==2.0
+imutils==0.5.4
+numpy==1.19.5
+tqdm==4.44.1
+Pillow==8.2.0
+scikit_learn==0.24.2
