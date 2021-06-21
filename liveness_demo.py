@@ -8,13 +8,12 @@ import argparse
 import cv2
 import os
 from PIL import Image
-import torchvision.models as models
 import torch
 from torch.autograd import Variable
-import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import transforms
-from matrix_diff import F_feature
+from src.matrix_diff import F_feature
+from src.model import liveness_model
 
 
 ap = argparse.ArgumentParser()
@@ -47,14 +46,7 @@ transform_for_train_and_val = transforms.Compose(
 	]
 )
 
-lv_model = models.squeezenet1_1(pretrained=True)
-lv_model.classifier = nn.Sequential(
-	nn.Dropout(p=0.5),
-	nn.Conv2d(512, 2, kernel_size=1),
-	nn.ReLU(inplace=True),
-	nn.AvgPool2d(13)
-)
-lv_model.forward = lambda x: lv_model.classifier(lv_model.features(x)).view(x.size(0), 2)
+lv_model = liveness_model()
 lv_model.load_state_dict(torch.load(args["model"], map_location=torch.device('cpu'))['state_dict'])
 lv_model.eval()
 

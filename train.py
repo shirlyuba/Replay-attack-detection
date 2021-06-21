@@ -13,7 +13,7 @@ import torch.optim as optim
 import tqdm
 from sklearn.model_selection import train_test_split
 from src.dataset import CustomDataset
-from matrix_diff import F_feature
+from src.matrix_diff import F_feature
 from torchvision import transforms
 
 
