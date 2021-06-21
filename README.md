@@ -52,6 +52,17 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                         path to output directory
 ```
+  
+To create dataset use **the following structure**:
+  - **Dataset**
+    - **Real**
+      - folder_1
+      - folder_2
+      - ...
+    - **Fake**
+      - folder_1
+      - folder_2
+      - ... 
 </details>
 
 
