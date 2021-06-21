@@ -9,7 +9,7 @@ import os
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-o", "--output", type=str, required=True,
-                help="path to output directory of videos")
+                help="path to output directory with videos")
 ap.add_argument('-n', '--name', type=str, required=True,
                 help="name of video")
 args = vars(ap.parse_args())

@@ -13,7 +13,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--input", type=str, required=False,
 	help="path to input video")
 ap.add_argument("-o", "--output", type=str, required=True,
-	help="path to output directory of cropped faces")
+	help="path to output directory")
 args = vars(ap.parse_args())
 
 
