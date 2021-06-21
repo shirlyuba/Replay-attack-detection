@@ -6,13 +6,13 @@ import numpy as np
 import argparse
 import cv2
 import os
-import torchvision.models as models
 import torch
 import torch.nn as nn
+from src.model import liveness_model
 import torch.optim as optim
 import tqdm
 from sklearn.model_selection import train_test_split
-from dataset import CustomDataset
+from src.dataset import CustomDataset
 from matrix_diff import F_feature
 from torchvision import transforms
 
@@ -30,15 +30,7 @@ ap.add_argument("-n", "--epochs", type=str, required=True,
 args = vars(ap.parse_args())
 
 
-
-lv_model = models.squeezenet1_1(pretrained=True)
-lv_model.classifier = nn.Sequential(
-    nn.Dropout(p=0.5),
-    nn.Conv2d(512, 2, kernel_size=1),
-    nn.ReLU(inplace=True),
-    nn.AvgPool2d(13)
-)
-lv_model.forward = lambda x: lv_model.classifier(lv_model.features(x)).view(x.size(0), 2)
+lv_model = liveness_model()
 
 
 protoPath = os.path.sep.join(["FaceDetector", "deploy.prototxt"])
