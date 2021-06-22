@@ -59,18 +59,18 @@ for cls in ["Fake", "Real"]:
           if file != 0:
             prev_img = curr_img
           curr_img = cv2.imread(os.path.join(args["data"], cls, path, str(file) + '.png'))
-          blob = cv2.dnn.blobFromImage(cv2.resize(curr_img, (300, 300)), 1.0,
-                                       (300, 300), (104.0, 177.0, 123.0))
-          (h, w) = curr_img.shape[:2]
-
-          net.setInput(blob)
-          detections = net.forward()
-          i = np.argmax(detections[0, 0, :, 2])
-          box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-          (startX, startY, endX, endY) = box.astype("int")
+          # blob = cv2.dnn.blobFromImage(cv2.resize(curr_img, (300, 300)), 1.0,
+          #                              (300, 300), (104.0, 177.0, 123.0))
+          # (h, w) = curr_img.shape[:2]
+          #
+          # net.setInput(blob)
+          # detections = net.forward()
+          # i = np.argmax(detections[0, 0, :, 2])
+          # box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+          # (startX, startY, endX, endY) = box.astype("int")
           if file != 0:
             map = F_feature(prev_img, curr_img).astype('float32')
-            diff = np.append(diff, cv2.resize(map[startY:endY, startX:endX], (256, 256)))
+            diff = np.append(diff, cv2.resize(map, (256, 256)))
     shape = (-1, 256, 256, 3)
     diff = diff.reshape(shape)
     # new_data = np.array([])

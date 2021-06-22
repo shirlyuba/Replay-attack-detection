@@ -31,14 +31,14 @@ modelPath = os.path.sep.join(["FaceDetector","res10_300x300_ssd_iter_140000.caff
 net = cv2.dnn.readNetFromCaffe(protoPath, modelPath)
 
 if args["input"] is None:
-	vs = VideoStream(src=0).start()
+	vs = cv2.VideoCapture(0)
 else:
 	vs = cv2.VideoCapture(args["input"])
 
 
 if args["output"] is not None:
 	fourcc = cv2.VideoWriter_fourcc(*'XVID')
-	out = cv2.VideoWriter(args["output"], fourcc, 24.0, (640,480))
+	out = cv2.VideoWriter(args["output"], fourcc, 12.0, (640,480))
 
 transform_for_train_and_val = transforms.Compose(
 	[
@@ -54,14 +54,11 @@ lv_model.eval()
 classes = {0:'fake', 1:'real'}
 prev_face = [0]
 
-while True:
+while vs.isOpened():
 
-	if args["input"] is None:
-		frame = vs.read()
-	else:
-		(grabbed, frame) = vs.read()
-		if not grabbed:
-			break
+	(grabbed, frame) = vs.read()
+	if not grabbed:
+		break
 
 	(h, w) = frame.shape[:2]
 	blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
@@ -82,13 +79,13 @@ while True:
 				endX = min(w, endX)
 				endY = min(h, endY)
 
-				face_map = map[startY:endY, startX:endX]
+				face_map = map#[startY:endY, startX:endX]
 				face_map = cv2.resize(face_map, (256, 256))
 				img = Image.fromarray(face_map, "RGB")
 				img = transform_for_train_and_val(img)
 				im = Variable(img, requires_grad=True).unsqueeze(0)
 				preds = F.softmax(lv_model(im))[0][1].cpu().detach().numpy()
-				if preds > 0.79:
+				if preds > 0.7:
 					j = 1
 				else:
 					j = 0
@@ -110,7 +107,8 @@ while True:
 
 	cv2.imshow("Frame", frame)
 	if args["output"] is not None:
-		out.write(frame)
+		if frame != []:
+			out.write(frame)
 	key = cv2.waitKey(1) & 0xFF
 
 	if key == ord("z"):
@@ -118,7 +116,7 @@ while True:
 
 cv2.destroyAllWindows()
 
-if args["input"] is None:
-	vs.stop()
-else:
-	vs.release()
+vs.release()
+
+if args["output"] is not None:
+	out.release()
